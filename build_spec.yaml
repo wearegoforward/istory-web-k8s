@@ -28,8 +28,8 @@ steps:
 
   - name: Setup Java JDK 17
     command: |
-      sudo apt-get update
-      sudo apt-get install -y openjdk-17-jdk
+      sudo yum update
+      sudo yum install -y openjdk-17-jdk
       java -version
 
   - name: Setup Gradle
