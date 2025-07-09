@@ -37,8 +37,8 @@ steps:
     timeoutInSeconds: 400
     name: Setup Java JDK 17
     command: |
-      sudo yum update
-      sudo yum install -y openjdk-17-jdk
+      yum update
+      yum install -y openjdk-17-jdk
       export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
       export PATH=$JAVA_HOME/bin:$PATH
       java -version
