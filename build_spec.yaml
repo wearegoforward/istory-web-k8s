@@ -38,7 +38,7 @@ steps:
     name: Setup Java JDK 17
     command: |
       yum update
-      yum install -y openjdk-17-jdk
+      yum install java-17-openjdk java-17-openjdk-devel
       export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
       export PATH=$JAVA_HOME/bin:$PATH
       java -version
