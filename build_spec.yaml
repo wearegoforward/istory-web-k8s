@@ -12,56 +12,78 @@ env:
     - DOCKER_IMAGE
 
 steps:
-  - name: Checkout source
+  - type: Command
+    timeoutInSeconds: 400
+    name: Checkout source
     command: |
       echo "Source already mounted by DevOps Build Pipeline"
-
-  - name: Setup MySQL (Optional)
+  
+  - type: Command
+    timeoutInSeconds: 400
+    name: Setup MySQL (Optional)
     command: |
       echo "MySQL is typically handled in test env. Skipping MySQL service in OCI."
 
-  - name: Install Kubectl
+  - type: Command
+    timeoutInSeconds: 400
+    name: Install Kubectl
     command: |
       curl -LO "https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
       chmod +x kubectl
       mv kubectl /usr/local/bin/
 
-  - name: Setup Java JDK 17
+  - type: Command
+    timeoutInSeconds: 400
+    name: Setup Java JDK 17
     command: |
       sudo yum update
       sudo yum install -y openjdk-17-jdk
       java -version
 
-  - name: Setup Gradle
+  - type: Command
+    timeoutInSeconds: 400
+    name: Setup Gradle
     command: |
       wget https://services.gradle.org/distributions/gradle-8.6-bin.zip
       unzip -d /opt/gradle gradle-8.6-bin.zip
       export PATH=$PATH:/opt/gradle/gradle-8.6/bin
 
-  - name: Build with Gradle
+  - type: Command
+    timeoutInSeconds: 400
+    name: Build with Gradle
     command: |
       ./gradlew build
 
-  - name: Copy JAR to Docker Directory
+  - type: Command
+    timeoutInSeconds: 400
+    name: Copy JAR to Docker Directory
     command: |
       mkdir -p xinfra/docker/build/libs/
       cp build/libs/*.jar xinfra/docker/
 
-  - name: Docker Build
+  - type: Command
+    timeoutInSeconds: 400
+    name: Docker Build
     command: |
       docker build ./xinfra/docker -t $DOCKER_IMAGE:$DOCKER_TAG -f ./xinfra/docker/Dockerfile
       docker tag $DOCKER_IMAGE:$DOCKER_TAG $DOCKER_IMAGE:latest
 
-  - name: Docker Login
+  - type: Command
+    timeoutInSeconds: 400
+    name: Docker Login
     command: |
       echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-
-  - name: Docker Push
+ 
+  - type: Command
+    timeoutInSeconds: 400
+    name: Docker Push
     command: |
       docker push $DOCKER_IMAGE:$DOCKER_TAG
       docker push $DOCKER_IMAGE:latest
 
-  - name: Kustomize 설치 및 이미지 패치
+  - type: Command
+    timeoutInSeconds: 400
+    name: Kustomize 설치 및 이미지 패치
     command: |
       curl -s https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh | bash
       mv kustomize /usr/local/bin/
