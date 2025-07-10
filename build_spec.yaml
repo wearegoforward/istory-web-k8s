@@ -63,7 +63,7 @@ steps:
       mkdir -p xinfra/docker/build/libs/
       ls build/libs/ -al
       ls xinfra/docker/ -al
-      cp build/libs/*.jar xinfra/docker/istory.jar
+      cp build/libs/*.jar xinfra/docker/
 
   - type: Command
     timeoutInSeconds: 400
