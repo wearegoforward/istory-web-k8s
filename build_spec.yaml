@@ -62,8 +62,9 @@ steps:
     command: |
       mkdir -p xinfra/docker/build/libs/
       ls build/libs/ -al
-      ls xinfra/docker/ -al
       cp build/libs/*.jar xinfra/docker/
+      ls xinfra/docker/ -al
+      
 
   - type: Command
     timeoutInSeconds: 400
