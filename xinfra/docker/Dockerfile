@@ -4,5 +4,5 @@ RUN addgroup -S istory && adduser -S istory -G istory
 USER istory
 WORKDIR /home/istory
 RUN ls -al
-COPY ./xinfa/docker/*.jar /home/istory/istory.jar
+COPY xinfa/docker/*.jar /home/istory/istory.jar
 ENTRYPOINT ["java","-jar","/home/istory/istory.jar"]
