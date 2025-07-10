@@ -3,5 +3,6 @@ VOLUME /tmp
 RUN addgroup -S istory && adduser -S istory -G istory
 USER istory
 WORKDIR /home/istory
+RUN ls -al
 COPY *.jar /home/istory/istory.jar
 ENTRYPOINT ["java","-jar","/home/istory/istory.jar"]
