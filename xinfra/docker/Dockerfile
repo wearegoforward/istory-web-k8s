@@ -4,5 +4,5 @@ RUN addgroup -S istory && adduser -S istory -G istory
 USER istory
 WORKDIR /home/istory
 RUN ls -al
-COPY *.jar /home/istory/istory.jar
+COPY springbootdeveloper-0.0.1-SNAPSHOT.jar /home/istory/istory.jar
 ENTRYPOINT ["java","-jar","/home/istory/istory.jar"]
