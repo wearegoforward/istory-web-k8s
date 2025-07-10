@@ -69,7 +69,7 @@ steps:
     timeoutInSeconds: 400
     name: Docker Build
     command: |
-       docker build -t newimage -f ./xinfra/docker/Dockerfile .
+       docker build -t newimage -f ./xinfra/docker/Dockerfile ./xinfra/docker
 #      docker build ./xinfra/docker -t $DOCKER_IMAGE:$DOCKER_TAG -f ./xinfra/docker/Dockerfile
 #      docker tag $DOCKER_IMAGE:$DOCKER_TAG $DOCKER_IMAGE:latest
     
