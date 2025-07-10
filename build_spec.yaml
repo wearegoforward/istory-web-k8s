@@ -61,6 +61,7 @@ steps:
     name: Copy JAR to Docker Directory
     command: |
       mkdir -p xinfra/docker/build/libs/
+      ls -al
       cp build/libs/*.jar xinfra/docker/
 
   - type: Command
