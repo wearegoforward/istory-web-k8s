@@ -37,10 +37,12 @@ steps:
     timeoutInSeconds: 400
     name: Setup Java JDK 17
     command: |
-      yum install -y oraclelinux-developer-release-el7
-      yum-config-manager --enable ol7_developer_EPEL
-      yum install -y java-17-openjdk java-17-openjdk-devel
-      export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+      curl -L -o openjdk17.tar.gz https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.11+9/OpenJDK17U-jdk_x64_linux_hotspot_17.0.11_9.tar.gz
+      mkdir -p /usr/lib/jvm/java-17-openjdk
+      tar -xzf openjdk17.tar.gz -C /usr/lib/jvm/java-17-openjdk --strip-components=1
+      echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk" >> ~/.bashrc
+      echo "export PATH=\$JAVA_HOME/bin:\$PATH" >> ~/.bashrc
+      export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
       export PATH=$JAVA_HOME/bin:$PATH
       java -version
 
