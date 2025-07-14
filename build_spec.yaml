@@ -17,21 +17,29 @@ env:
 
 steps:
   - type: Command
-    name: Init and Define Variables
-    timeoutInSeconds: 60
+    name: "Define Image Tag - Commit ID"
+    timeoutInSeconds: 30
     command: |
-      export APP_NAME=${appName}
-      export COMMIT_ID=$(echo ${OCI_TRIGGER_COMMIT_HASH:-} | cut -c1-7)
-      export BUILDRUN_HASH=$(echo ${OCI_BUILD_RUN_ID} | rev | cut -c1-7)
-      export TAG=${COMMIT_ID:-$BUILDRUN_HASH}
-      
-      export TENANCY_NAMESPACE=$(oci os ns get --query data --raw-output)
-      export REGION=${OCI_RESOURCE_PRINCIPAL_REGION}
-      export IMAGE_PATH=$REGION.ocir.io/$TENANCY_NAMESPACE/$APP_NAME
-      export OCIR_PATH=$IMAGE_PATH
-      echo "APP_NAME: $APP_NAME"
-      echo "TAG: $TAG"
-      echo "IMAGE_PATH: $IMAGE_PATH"
+      COMMIT_ID=`echo ${OCI_TRIGGER_COMMIT_HASH} | cut -c 1-7`
+      BUILDRUN_HASH=`echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7`
+      [ -z "$COMMIT_ID" ] && TAG=$BUILDRUN_HASH || TAG=$COMMIT_ID
+
+  - type: Command
+    name: "Define IMAGE_PATH Path"
+    timeoutInSeconds: 30
+    command: |
+      TENANCY_NAMESPACE=`oci os ns get --query data --raw-output`
+      REPO_NAME=$appName
+      IMAGE_PATH=$OCI_RESOURCE_PRINCIPAL_REGION.ocir.io/$TENANCY_NAMESPACE/$REPO_NAME/my-func/webserver/
+
+  - type: Command
+    name: "Set OCIR_PATH"
+    timeoutInSeconds: 30
+    command: |
+      TENANCY_NAMESPACE=`oci os ns get --query data --raw-output`
+      REGION=$OCI_RESOURCE_PRINCIPAL_REGION
+      OCIR_PATH=$REGION.ocir.io/$TENANCY_NAMESPACE/$appName
+      echo "OCIR_PATH: $OCIR_PATH"
 
 
   - type: Command
@@ -117,6 +125,19 @@ steps:
 #      mv kustomize /usr/local/bin/
 #      cd overlay/oci-dev
 #      kustomize edit set image $DOCKER_IMAGE=$DOCKER_IMAGE:$DOCKER_TAG
+
+  - type: Command
+    name: "Check exportedVariables"
+    timeoutInSeconds: 30
+    command: |
+      [ -z "$APP_NAME" ] && APP_NAME=unknown
+      [ -z "$IMAGE_PATH" ] && IMAGE_PATH=unknown
+      [ -z "$TAG" ] && TAG=unknown
+      [ -z "$OCIR_PATH" ] && OCIR_PATH=unknown
+      echo "APP_NAME: $APP_NAME"
+      echo "IMAGE_PATH: $IMAGE_PATH"
+      echo "TAG: $TAG"
+      echo "OCIR_PATH: $OCIR_PATH"
 
 
 outputArtifacts:
